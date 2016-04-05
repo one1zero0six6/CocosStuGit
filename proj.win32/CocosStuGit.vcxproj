@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -110,7 +110,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
       <Inputs>$(TargetFileName)</Inputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
-
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
@@ -156,9 +155,46 @@ xcopy /Y /Q "$(COCOS_X_ROOT)\cocos2d-x-3.10\prebuilt\win32\*.*" "$(OutDir)"
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
-  
   <ItemGroup>
     <ResourceCompile Include="game.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\cocosstudio\arrivalsfinalsound.mp3" />
+    <Media Include="..\cocosstudio\gain point.mp3" />
+    <Media Include="..\cocosstudio\running.mp3" />
+    <Media Include="..\cocosstudio\soundtest.wav" />
+    <Media Include="..\cocosstudio\SR_bg.mp3" />
+    <Media Include="..\cocosstudio\thinking cloud.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\cocosstudio\hansans48.fnt" />
+    <None Include="..\cocosstudio\MainScene.csd" />
+    <None Include="..\cocosstudio\MainScene.udf" />
+    <None Include="..\cocosstudio\scene101.plist" />
+    <None Include="..\cocosstudio\scene101bg.plist" />
+    <None Include="..\cocosstudio\triangleNode.csd" />
+    <None Include="..\cocosstudio\triangleNode.udf" />
+    <None Include="..\cocosstudio\TriNode.csd" />
+    <None Include="..\cocosstudio\TriNode.udf" />
+    <None Include="..\Resources\res\hansans48.fnt" />
+    <None Include="..\Resources\res\MainScene.csb" />
+    <None Include="..\Resources\res\scene101.plist" />
+    <None Include="..\Resources\res\scene101bg.plist" />
+    <None Include="..\Resources\res\triangleNode.csb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\cocosstudio\hansans48_0.png" />
+    <Image Include="..\cocosstudio\HelloWorld.png" />
+    <Image Include="..\cocosstudio\scene101.png" />
+    <Image Include="..\cocosstudio\scene101bg.png" />
+    <Image Include="..\Resources\res\hansans48_0.png" />
+    <Image Include="..\Resources\res\HelloWorld.png" />
+    <Image Include="..\Resources\res\scene101.png" />
+    <Image Include="..\Resources\res\scene101bg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\cocosstudio\Marker Felt.ttf" />
+    <Font Include="..\Resources\res\Marker Felt.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

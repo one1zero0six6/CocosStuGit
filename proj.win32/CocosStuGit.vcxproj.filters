@@ -10,6 +10,12 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cocosstudio">
+      <UniqueIdentifier>{e13b2788-dbce-44aa-ab60-00b7bf366ead}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource\res">
+      <UniqueIdentifier>{82589d56-d967-4ba5-ae57-de362b324ce8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -37,5 +43,103 @@
     <ResourceCompile Include="game.rc">
       <Filter>resource</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\cocosstudio\arrivalsfinalsound.mp3">
+      <Filter>cocosstudio</Filter>
+    </Media>
+    <Media Include="..\cocosstudio\gain point.mp3">
+      <Filter>cocosstudio</Filter>
+    </Media>
+    <Media Include="..\cocosstudio\running.mp3">
+      <Filter>cocosstudio</Filter>
+    </Media>
+    <Media Include="..\cocosstudio\soundtest.wav">
+      <Filter>cocosstudio</Filter>
+    </Media>
+    <Media Include="..\cocosstudio\SR_bg.mp3">
+      <Filter>cocosstudio</Filter>
+    </Media>
+    <Media Include="..\cocosstudio\thinking cloud.mp3">
+      <Filter>cocosstudio</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\cocosstudio\hansans48.fnt">
+      <Filter>cocosstudio</Filter>
+    </None>
+    <None Include="..\cocosstudio\MainScene.csd">
+      <Filter>cocosstudio</Filter>
+    </None>
+    <None Include="..\cocosstudio\MainScene.udf">
+      <Filter>cocosstudio</Filter>
+    </None>
+    <None Include="..\cocosstudio\scene101.plist">
+      <Filter>cocosstudio</Filter>
+    </None>
+    <None Include="..\cocosstudio\scene101bg.plist">
+      <Filter>cocosstudio</Filter>
+    </None>
+    <None Include="..\cocosstudio\triangleNode.csd">
+      <Filter>cocosstudio</Filter>
+    </None>
+    <None Include="..\cocosstudio\triangleNode.udf">
+      <Filter>cocosstudio</Filter>
+    </None>
+    <None Include="..\cocosstudio\TriNode.csd">
+      <Filter>cocosstudio</Filter>
+    </None>
+    <None Include="..\cocosstudio\TriNode.udf">
+      <Filter>cocosstudio</Filter>
+    </None>
+    <None Include="..\Resources\res\hansans48.fnt">
+      <Filter>resource\res</Filter>
+    </None>
+    <None Include="..\Resources\res\MainScene.csb">
+      <Filter>resource\res</Filter>
+    </None>
+    <None Include="..\Resources\res\scene101.plist">
+      <Filter>resource\res</Filter>
+    </None>
+    <None Include="..\Resources\res\scene101bg.plist">
+      <Filter>resource\res</Filter>
+    </None>
+    <None Include="..\Resources\res\triangleNode.csb">
+      <Filter>resource\res</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\cocosstudio\hansans48_0.png">
+      <Filter>cocosstudio</Filter>
+    </Image>
+    <Image Include="..\cocosstudio\HelloWorld.png">
+      <Filter>cocosstudio</Filter>
+    </Image>
+    <Image Include="..\cocosstudio\scene101.png">
+      <Filter>cocosstudio</Filter>
+    </Image>
+    <Image Include="..\cocosstudio\scene101bg.png">
+      <Filter>cocosstudio</Filter>
+    </Image>
+    <Image Include="..\Resources\res\hansans48_0.png">
+      <Filter>resource\res</Filter>
+    </Image>
+    <Image Include="..\Resources\res\HelloWorld.png">
+      <Filter>resource\res</Filter>
+    </Image>
+    <Image Include="..\Resources\res\scene101.png">
+      <Filter>resource\res</Filter>
+    </Image>
+    <Image Include="..\Resources\res\scene101bg.png">
+      <Filter>resource\res</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\cocosstudio\Marker Felt.ttf">
+      <Filter>cocosstudio</Filter>
+    </Font>
+    <Font Include="..\Resources\res\Marker Felt.ttf">
+      <Filter>resource\res</Filter>
+    </Font>
   </ItemGroup>
 </Project>

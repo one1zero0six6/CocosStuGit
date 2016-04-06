@@ -16,6 +16,9 @@
     <Filter Include="resource\res">
       <UniqueIdentifier>{82589d56-d967-4ba5-ae57-de362b324ce8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resource\res\Default">
+      <UniqueIdentifier>{214f298a-d8d5-4eb6-8807-5e476b1fa865}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -132,6 +135,9 @@
     </Image>
     <Image Include="..\Resources\res\scene101bg.png">
       <Filter>resource\res</Filter>
+    </Image>
+    <Image Include="..\Resources\res\Default\SliderNode_Disable.png">
+      <Filter>resource\res\Default</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

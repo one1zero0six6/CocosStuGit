@@ -187,6 +187,7 @@ xcopy /Y /Q "$(COCOS_X_ROOT)\cocos2d-x-3.10\prebuilt\win32\*.*" "$(OutDir)"
     <Image Include="..\cocosstudio\HelloWorld.png" />
     <Image Include="..\cocosstudio\scene101.png" />
     <Image Include="..\cocosstudio\scene101bg.png" />
+    <Image Include="..\Resources\res\Default\SliderNode_Disable.png" />
     <Image Include="..\Resources\res\hansans48_0.png" />
     <Image Include="..\Resources\res\HelloWorld.png" />
     <Image Include="..\Resources\res\scene101.png" />

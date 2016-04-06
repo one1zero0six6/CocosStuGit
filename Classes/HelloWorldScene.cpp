@@ -83,8 +83,8 @@ bool HelloWorld::init()
     // add the sprite as a child to this layer
     this->addChild(sprite, 0);
     **/
-	//Size visibleSize = Director::getInstance()->getVisibleSize();
-	//Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
     //////////////////////////////
     // 1. super init first
     if ( !Layer::init() )
@@ -169,6 +169,29 @@ bool HelloWorld::init()
 	runner->setColor(Color3B(255, 255, 180));
 
 //---------------------------------------------------------------------------------------------	
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("scene101.plist");
+	auto cache = SpriteFrameCache::getInstance();//import anim picture ((Frames
+	// 利用 STL 的 vector 來儲存連續的 SpriteFrame
+	Vector<SpriteFrame*> animFrames(8);
+	char tmp[50];
+	for (int j = 1; j <= 8; j++)
+	{
+		sprintf(tmp, "cuber%02d.png", j); // 產生 cuber01.png ~  cuber08.png
+										  //從 plist 中取得圖檔名稱並建立 spriteFrame
+		auto frame = cache->getSpriteFrameByName(tmp);
+		animFrames.pushBack(frame);
+	}//import anim picture  ((Frames
+
+	auto animation = Animation::createWithSpriteFrames(animFrames, 0.05f);
+
+	auto runner1 = Sprite::createWithSpriteFrameName("cuber01.png");//creat body
+	runner1->setPosition(visibleSize.width / 2.0f, visibleSize.height / 2.0f);
+
+	runner1->runAction(RepeatForever::create(Animate::create(animation)));// 
+	this->addChild(runner1);//將物件放入場景
+
+
+
 
 	//auto triblock = (cocos2d::Node*)rootNode->getChildByName("triRoot");
 	//auto triaction = (ActionTimeline *)CSLoader::createTimeline("triblock");

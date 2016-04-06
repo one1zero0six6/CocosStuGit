@@ -82,11 +82,13 @@
           <PlistImageFile Name="sr_line2.png" Key="sr_line2.png" />
         </PlistImageFolder>
         <Audio Name="arrivalsfinalsound.mp3" />
+        <File Name="cuberanim.plist" />
         <Audio Name="gain point.mp3" />
         <Fnt Name="hansans48.fnt" />
         <Image Name="HelloWorld.png" />
         <Project Name="MainScene.csd" Type="Scene" />
         <TTF Name="Marker Felt.ttf" />
+        <File Name="RunnerNode.csb" />
         <Audio Name="running.mp3" />
         <Audio Name="soundtest.wav" />
         <Audio Name="SR_bg.mp3" />

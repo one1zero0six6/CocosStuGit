@@ -81,20 +81,24 @@
           <PlistImageFile Name="sr_line1.png" Key="sr_line1.png" />
           <PlistImageFile Name="sr_line2.png" Key="sr_line2.png" />
         </PlistImageFolder>
+        <Project Name="AnimationAction.csd" Type="Scene" />
         <Audio Name="arrivalsfinalsound.mp3" />
+        <Project Name="ASimpleRunner.csd" Type="Node" />
         <File Name="cuberanim.plist" />
         <Audio Name="gain point.mp3" />
         <Fnt Name="hansans48.fnt" />
         <Image Name="HelloWorld.png" />
         <Project Name="MainScene.csd" Type="Scene" />
         <TTF Name="Marker Felt.ttf" />
-        <File Name="RunnerNode.csb" />
+        <Project Name="RunnerNode.csd" Type="Node" />
         <Audio Name="running.mp3" />
         <Audio Name="soundtest.wav" />
         <Audio Name="SR_bg.mp3" />
         <Audio Name="thinking cloud.mp3" />
         <Project Name="triangleNode.csd" Type="Node" />
         <Project Name="TriNode.csd" Type="Node" />
+        <Project Name="Myrunner.csd" Type="Node" />
+        <Project Name="Myrunner2.csd" Type="Node" />
       </RootFolder>
     </Group>
   </SolutionFolder>

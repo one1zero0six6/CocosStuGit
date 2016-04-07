@@ -1,5 +1,6 @@
 #include "HelloWorldScene.h"
 #include "cocostudio/CocoStudio.h"
+#include "Final\CRunner.h"
 
 USING_NS_CC;
 
@@ -25,7 +26,7 @@ Scene* HelloWorld::createScene()
 HelloWorld::~HelloWorld()
 {
 	// 課堂練習一
-	_jumpAction->release();
+	//_jumpAction->release();
 }
 
 // on "init" you need to initialize your instance
@@ -85,6 +86,7 @@ bool HelloWorld::init()
     **/
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
     //////////////////////////////
     // 1. super init first
     if ( !Layer::init() )
@@ -109,107 +111,75 @@ bool HelloWorld::init()
 //---------------------------------------------------------------------------------------------
 
 // Sprite ------------------------------------------------------------------------------------- 
-	_runner = (cocos2d::Sprite *)rootNode->getChildByName("Gcuber");
-	_runner->setColor(Color3B(75,155,77));
-	Point pt = _runner->getPosition();
-
-	_jumpAction = cocos2d::JumpTo::create(1.25f, Point(pt.x - 600, pt.y), 100, 3);
+	//auto runner = (cocos2d::Sprite *)rootNode->getChildByName("cuber01");
+	//runner->setColor(Color3B(75,155,77));
+	//Point pt = runner->getPosition();
 	//auto jumpAction = cocos2d::JumpTo::create(1.25f, Point(pt.x - 600, pt.y), 100, 3);
-	_jumpAction->retain();//保留不自動釋放，記得要在解構元release
-	//_runner->runAction(jumpAction);
+	//runner->runAction(jumpAction);
 
-
-
+	// 課堂練習一
+	//_runner = (cocos2d::Sprite *)rootNode->getChildByName("cuber01");
+	//_runner->setColor(Color3B(75, 155, 77));
+	//Point pt = _runner->getPosition();
+	//_jumpAction = cocos2d::JumpTo::create(1.25f, Point(pt.x - 600, pt.y), 100, 3);
+	//_jumpAction->retain();
 //---------------------------------------------------------------------------------------------		
 
 // Button -------------------------------------------------------------------------------------
-	Button *cuberbtn = dynamic_cast<Button*>(rootNode->getChildByName("CuberBtn"));
-//	Button *cuberbtn = (cocos2d::ui::Button *)(rootNode->getChildByName("CuberBtn"));
-	cuberbtn->addTouchEventListener(CC_CALLBACK_2(HelloWorld::CuberBtnTouchEvent, this));
-
+	//Button *cuberbtn = dynamic_cast<Button*>(rootNode->getChildByName("CuberBtn"));
+	////Button *cuberbtn = (cocos2d::ui::Button *)(rootNode->getChildByName("CuberBtn"));
+	//cuberbtn->addTouchEventListener(CC_CALLBACK_2(HelloWorld::CuberBtnTouchEvent, this));
 //---------------------------------------------------------------------------------------------	
 
 // 文本 TTF 字型-------------------------------------------------------------------------------
 	//auto text = (cocos2d::ui::Text *)rootNode->getChildByName("Text101");
 	//text->setColor(Color3B(200, 255, 50));
 	// 以下用於 slider 顯示用
-	_sliderValue = (cocos2d::ui::Text *)rootNode->getChildByName("Text101");
+	//_sliderValue = (cocos2d::ui::Text *)rootNode->getChildByName("Text101");
 //---------------------------------------------------------------------------------------------	
 
 // FNT 字體-------------------------------------------------------------------------------
-	auto bmtlabel = (cocos2d::Label *)rootNode->getChildByName("BMFont");
-	bmtlabel->setColor(Color3B(200, 255, 50));
+	//auto bmtlabel = (cocos2d::Label *)rootNode->getChildByName("BMFont");
+	//bmtlabel->setColor(Color3B(200, 255, 50));
 //---------------------------------------------------------------------------------------------	
 
 // CheckBox-------------------------------------------------------------------------------
-	CheckBox *checkBox = static_cast<CheckBox*>(rootNode->getChildByName("CheckBox_1"));
-	checkBox->addEventListener(CC_CALLBACK_2(HelloWorld::checkBoxTouchEvent, this));
+//	CheckBox *checkBox = dynamic_cast<CheckBox*>(rootNode->getChildByName("CheckBox_1"));
+////	CheckBox *checkBox = (cocos2d::ui::CheckBox*)(rootNode->getChildByName("CheckBox_1"));
+//	checkBox->addEventListener(CC_CALLBACK_2(HelloWorld::checkBoxTouchEvent, this));
 //---------------------------------------------------------------------------------------------	
 
-//  LoadingBar-------------------------------------------------------------------------------
-	auto loadingBar = (cocos2d::ui::LoadingBar *)rootNode->getChildByName("LoadingBar_1");
-	loadingBar->setDirection(LoadingBar::Direction::LEFT);
-	loadingBar->setPercent(50);
-	//loadingBar->schedule( CC_SCHEDULE_SELECTOR(HelloWorld::doStep) );
+// loadingBar -------------------------------------------------------------------------------
+	//auto loadingBar = (cocos2d::ui::LoadingBar *)rootNode->getChildByName("LoadingBar_1");
+	//loadingBar->setDirection(LoadingBar::Direction::LEFT);
+	//loadingBar->setPercent(50);
 //---------------------------------------------------------------------------------------------	
+
+// 課堂練習二
+	//this->schedule(CC_SCHEDULE_SELECTOR(HelloWorld::doStep));
+
 
 // Slider 滑動條 -------------------------------------------------------------------------------------
-	auto *slider = (cocos2d::ui::Slider *)(rootNode->getChildByName("Slider_1"));
-	slider->addEventListener(CC_CALLBACK_2(HelloWorld::sliderEvent, this));
-	slider->setPercent(50);
-	slider->setMaxPercent(100);		// 可以設定超過 100
+	//auto *slider = (cocos2d::ui::Slider *)(rootNode->getChildByName("Slider_1"));
+	//slider->addEventListener(CC_CALLBACK_2(HelloWorld::sliderEvent, this));
+	//slider->setPercent(50);
+	//slider->setMaxPercent(100);		// 可以設定超過 100
 //---------------------------------------------------------------------------------------------	
 
 // 序列幀動畫 -------------------------------------------------------------------------------------
-	auto action = (ActionTimeline *)CSLoader::createTimeline("MainScene.csb");
-	rootNode->runAction(action);
-	action->gotoFrameAndPlay(0, 21, true);
-
-	auto runner = (cocos2d::Sprite *)rootNode->getChildByName("Sprite_1");
-	runner->setColor(Color3B(255, 255, 180));
-
+	//auto action = (ActionTimeline *)CSLoader::createTimeline("MainScene.csb");
+	//rootNode->runAction(action);
+	//action->gotoFrameAndPlay(0, 21, true);
 //---------------------------------------------------------------------------------------------	
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("scene101.plist");
-	auto cache = SpriteFrameCache::getInstance();//import anim picture ((Frames
-	// 利用 STL 的 vector 來儲存連續的 SpriteFrame
-	Vector<SpriteFrame*> animFrames(8);
-	char tmp[50];
-	for (int j = 1; j <= 8; j++)
-	{
-		sprintf(tmp, "cuber%02d.png", j); // 產生 cuber01.png ~  cuber08.png
-										  //從 plist 中取得圖檔名稱並建立 spriteFrame
-		auto frame = cache->getSpriteFrameByName(tmp);
-		animFrames.pushBack(frame);
-	}//import anim picture  ((Frames
 
-	auto animation = Animation::createWithSpriteFrames(animFrames, 0.05f);
-
-	auto runner1 = Sprite::createWithSpriteFrameName("cuber01.png");//creat body
-	runner1->setPosition(visibleSize.width / 2.0f, visibleSize.height / 2.0f);
-
-	runner1->runAction(RepeatForever::create(Animate::create(animation)));// 
-	this->addChild(runner1);//將物件放入場景
-
-
-
-
-	//auto triblock = (cocos2d::Node*)rootNode->getChildByName("triRoot");
-	//auto triaction = (ActionTimeline *)CSLoader::createTimeline("triblock");
-	//triblock->runAction(triaction);
-	//auto trinode = CSLoader::createNode("triangleNode.csb");
-	//auto triblock = (cocos2d::Node*)trinode->getChildByName("triRoot");
-	//triblock->setPosition(500, 500);
-	//auto triaction = (ActionTimeline *)CSLoader::createTimeline("triangleNode.csb");
-	//triaction->gotoFrameAndPause(0);
-	//this->addChild(triblock);
     return true;
 }
 
-void HelloWorld::doStep(float dt)
-{
-
-}
-
+// 課堂練習二
+//void HelloWorld::doStep(float dt)
+//{
+//
+//}
 
 void HelloWorld::CuberBtnTouchEvent(Ref *pSender, Widget::TouchEventType type)
 {
@@ -223,7 +193,6 @@ void HelloWorld::CuberBtnTouchEvent(Ref *pSender, Widget::TouchEventType type)
 			break;
 		case Widget::TouchEventType::ENDED:
 			log("Touch Up");
-			_runner->runAction(_jumpAction);
 			break;
 		case Widget::TouchEventType::CANCELED:
 			log("Touch Cancelled");
@@ -245,7 +214,6 @@ void HelloWorld::checkBoxTouchEvent(Ref* object, CheckBox::EventType type) {
 		break;
 
 	}
-//	return(true);
 }
 
 
@@ -259,5 +227,3 @@ void HelloWorld::sliderEvent(cocos2d::Ref* sender, cocos2d::ui::Slider::EventTyp
 		_sliderValue->setString(StringUtils::format("Percent %5.2f", 100.0 * percent / maxPercent));
 	}
 }
-
-

@@ -13,8 +13,8 @@ class HelloWorld : public cocos2d::Layer
 {
 private:
 	// ½Ò°ó½m²ß¤@
-	cocos2d::Sprite *_runner;
-	cocos2d::JumpTo *_jumpAction;
+	//cocos2d::Sprite *_runner;
+	//cocos2d::JumpTo *_jumpAction;
 	cocos2d::ui::Text *_sliderValue;
 public:
 	~HelloWorld();
@@ -26,8 +26,6 @@ public:
 	void checkBoxTouchEvent(cocos2d::Ref* object, cocos2d::ui::CheckBox::EventType type);
 	void CuberBtnTouchEvent(cocos2d::Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
 	void sliderEvent(cocos2d::Ref* sender, cocos2d::ui::Slider::EventType type);
-
-	void doStep(float dt);
 
 	// implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);

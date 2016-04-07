@@ -19,6 +19,9 @@
     <Filter Include="resource\res\Default">
       <UniqueIdentifier>{214f298a-d8d5-4eb6-8807-5e476b1fa865}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Final">
+      <UniqueIdentifier>{ab18534a-2aad-4d9c-96cb-b67a826fe2ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -30,6 +33,12 @@
     <ClCompile Include="..\Classes\HelloWorldScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Final\CRunner.cpp">
+      <Filter>src\Final</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AnimationAction.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -39,6 +48,12 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\HelloWorldScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Final\CRunner.h">
+      <Filter>src\Final</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AnimationAction.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

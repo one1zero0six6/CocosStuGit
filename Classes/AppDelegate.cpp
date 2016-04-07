@@ -1,5 +1,13 @@
+#define LECTURE_EXAMPLE  2
+
 #include "AppDelegate.h"
+
+
+#if LECTURE_EXAMPLE == 1
 #include "HelloWorldScene.h"
+#elif LECTURE_EXAMPLE == 2
+#include "AnimationAction.h"
+#endif
 
 USING_NS_CC;
 
@@ -42,12 +50,16 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
-    director->setAnimationInterval(1.0 / 60);
+    director->setAnimationInterval(1.0f / 60.0f);
 
     FileUtils::getInstance()->addSearchPath("res");
 
+#if LECTURE_EXAMPLE == 1
     // create a scene. it's an autorelease object
     auto scene = HelloWorld::createScene();
+#elif LECTURE_EXAMPLE == 2
+	auto scene = AnimationAction::createScene();
+#endif
 
     // run
     director->runWithScene(scene);

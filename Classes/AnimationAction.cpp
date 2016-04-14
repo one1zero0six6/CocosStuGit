@@ -61,91 +61,51 @@ bool AnimationAction::init()
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("scene101.plist");
 // ------------------------------------------------------------------------------------------------- 
 // 方法一  利用 SpriteFrameCache 來儲存每一張要連續撥放的圖片
-//
-//	// STEP 2 : 產生連續圖片的檔名並加入 animation 中
-//	auto frameCache = SpriteFrameCache::getInstance();
-//	// 利用 STL 的 vector 來儲存連續的 SpriteFrame
-//	Vector<SpriteFrame*> animFrames(8);
-//	char tmp[50];
-//	for (int j = 1; j <= 8; j++)
-//	{
-//		sprintf(tmp, "cuber%02d.png", j); // 產生 cuber01.png ~  cuber08.png
-//										  //從 plist 中取得圖檔名稱並建立 spriteFrame
-//		auto frame = frameCache->getSpriteFrameByName(tmp);
-//		animFrames.pushBack(frame);
-//	}
-//	// STEP 3: 建立 animation
-//	auto animation1 = Animation::createWithSpriteFrames(animFrames, 0.04f);
-//
-//	// STEP 4：建立序列幀動畫的主體
-//	auto runner1 = Sprite::createWithSpriteFrameName("cuber01.png");
-//	runner1->setPosition(visibleSize.width / 2.0f, visibleSize.height / 2.0f + 150);
-//	this->addChild(runner1);
-//
-//	// STEP 5：由主體呼叫動畫的播放
-//	runner1->runAction(RepeatForever::create(Animate::create(animation1)));// 一直重複播放
-//
-////--------------------------------------------------------------------------------------------------
-//
-//	// 利用 STL 的 vector 來儲存連續的 SpriteFrame
-//	Vector<SpriteFrame*> beanFrames(4);
-//
-//	auto frame = frameCache->getSpriteFrameByName("bean1_wave01.png");
-//	beanFrames.pushBack(frame);
-//	frame = frameCache->getSpriteFrameByName("bean1_wave02.png");
-//	beanFrames.pushBack(frame);
-//	frame = frameCache->getSpriteFrameByName("bean1_wave03.png");
-//	beanFrames.pushBack(frame);
-//	frame = frameCache->getSpriteFrameByName("bean1_wave01.png");
-//	beanFrames.pushBack(frame);
-//
-//	// STEP 3: 建立 animation
-//	auto animationbean = Animation::createWithSpriteFrames(beanFrames, 0.04f);
-//
-//	// STEP 4：建立序列幀動畫的主體
-//	auto bean_wave = Sprite::createWithSpriteFrameName("bean1_wave01.png");
-//	bean_wave->setPosition(visibleSize.width / 2.0f, visibleSize.height / 2.0f );
-//	this->addChild(bean_wave);
-//
-//	// STEP 5：由主體呼叫動畫的播放
-//	bean_wave->runAction(RepeatForever::create(Animate::create(animationbean)));// 一直重複播放
-//// ------------------------------------------------------------------------------------------------- 
+
+	//// STEP 2 : 產生連續圖片的檔名並加入 animation 中
+	//auto frameCache = SpriteFrameCache::getInstance();
+	//// 利用 STL 的 vector 來儲存連續的 SpriteFrame
+	//Vector<SpriteFrame*> animFrames(8);
+	//char tmp[50];
+	//for (int j = 1; j <= 8; j++)
+	//{
+	//	sprintf(tmp, "cuber%02d.png", j); // 產生 cuber01.png ~  cuber08.png
+	//									  //從 plist 中取得圖檔名稱並建立 spriteFrame
+	//	auto frame = frameCache->getSpriteFrameByName(tmp);
+	//	animFrames.pushBack(frame);
+	//}
+	//// STEP 3: 建立 animation
+	//auto animation1 = Animation::createWithSpriteFrames(animFrames, 0.04f);
+
+	//// STEP 4：建立序列幀動畫的主體
+	//auto runner1 = Sprite::createWithSpriteFrameName("cuber01.png");
+	//runner1->setPosition(visibleSize.width / 2.0f, visibleSize.height / 2.0f + 150);
+	//this->addChild(runner1);
+
+	//// STEP 5：由主體呼叫動畫的播放
+	//runner1->runAction(RepeatForever::create(Animate::create(animation1)));// 一直重複播放
+
+//--------------------------------------------------------------------------------------------------
+
+// ------------------------------------------------------------------------------------------------- 
 // 方法二 利用儲存序列幀動畫的 plist 來建立
+/*
+	// STEP 2: 以 AnimationCache 來讀取該 plist 檔
+	auto animCache = AnimationCache::getInstance();
+	animCache->addAnimationsWithFile("cuberanim.plist");
+	auto animation2 = animCache->getAnimation("running");
 
-	//// STEP 2: 以 AnimationCache 來讀取該 plist 檔
-	//auto animCache = AnimationCache::getInstance();
-	//animCache->addAnimationsWithFile("cuberanim.plist");
-	//auto animation2 = animCache->getAnimation("running");
+	// STEP 3: 建立 animation
+	auto action2 = RepeatForever::create(Animate::create(animation2));
 
-	//// STEP 3: 建立 animation
-	//auto action2 = RepeatForever::create(Animate::create(animation2));
+	// STEP 4：建立序列幀動畫的主體
+	auto runner2 = Sprite::createWithSpriteFrameName("cuber01.png");
+	runner2->setPosition(visibleSize.width / 2.0f, visibleSize.height / 2.0f-150);
+	this->addChild(runner2);
 
-	//// STEP 4：建立序列幀動畫的主體
-	//auto runner2 = Sprite::createWithSpriteFrameName("cuber01.png");
-	//runner2->setPosition(visibleSize.width / 2.0f, visibleSize.height / 2.0f-150);
-	//this->addChild(runner2);
-
-	//// STEP 5：由主體呼叫動畫的播放
-	//runner2->runAction(action2);// 一直重複播放
-
-
-
-
-	//auto animCache2 = AnimationCache::getInstance();
-	//animCache2->addAnimationsWithFile("cuberanim.plist");
-	//auto Banimation = animCache2->getAnimation("beanmove");
-
-	//// STEP 3: 建立 animation
-	//auto beanaction2 = RepeatForever::create(Animate::create(Banimation));
-
-	//// STEP 4：建立序列幀動畫的主體
-	//auto beanmove = Sprite::createWithSpriteFrameName("cuber01.png");
-	//beanmove->setPosition(visibleSize.width / 2.0f, visibleSize.height / 2.0f - 150);
-	//this->addChild(beanmove);
-
-	//// STEP 5：由主體呼叫動畫的播放
-	//beanmove->runAction(beanaction2);// 一直重複播放
-
+	// STEP 5：由主體呼叫動畫的播放
+	runner2->runAction(action2);// 一直重複播放
+*/
 //--------------------------------------------------------------------------------------------------
 
 
@@ -160,18 +120,18 @@ bool AnimationAction::init()
 // BezierBy/BezierTo
 	// BezierTo
 	ccBezierConfig bezier;
-	
-	//bezier.controlPoint_1 = Point(540, 720);
-	//bezier.controlPoint_2 = Point(140, 720);
-	//bezier.endPosition = Point(40, 360);
-	//BezierTo * bezierto = BezierTo::create(1.5f, bezier);
-	//actionBody->runAction(bezierto);
-	
+	/*
+	bezier.controlPoint_1 = Point(540, 720);
+	bezier.controlPoint_2 = Point(140, 720);
+	bezier.endPosition = Point(40, 360);
+	BezierTo * bezierto = BezierTo::create(1.5f, bezier);
+	actionBody->runAction(bezierto);
+	*/
 	// BezierBy
 	//	bezier.endPosition = Point(0, visibleSize.height / 2.0f);
-	
-	bezier.controlPoint_1 = Point(-500, 360);
-	bezier.controlPoint_2 = Point(-100, 360);
+	/*
+	bezier.controlPoint_1 = Point(-100, 360);
+	bezier.controlPoint_2 = Point(-500, 360);
 	bezier.endPosition = Point(-600, 0);
 	BezierBy * bezierby = BezierBy::create(1.5f, bezier);
 	actionBody->runAction(bezierby);
@@ -181,42 +141,45 @@ bool AnimationAction::init()
 	auto sequence = cocos2d::Sequence::create(bezierby, bezierbyBack, NULL);
 	// 執行這個 Action 執行序列的組合
 	actionBody->runAction(sequence);
-	
+	*/
 //-------------------------------------------------------------------------------------------------
 
 // MoveTo/MoveBy
-	/*
-	MoveTo * moveto = MoveTo::create(1.25f, Point(40, 360));
-	actionBody->runAction(moveto);
-	// 產生反向的 Action，上一行以及以下的三行擇一直行即可
-	MoveBy * moveby = MoveBy::create(1.25f, Point(-600, 0));	
-	auto movebyBack = moveby->reverse();
-	actionBody->runAction(Sequence::create(moveby, movebyBack, NULL));
-	*/
+	
+	//MoveTo * moveto = MoveTo::create(1.25f, Point(40, 360));
+	////actionBody->runAction(moveto);
+	//// 產生反向的 Action，上一行以及以下的三行擇一直行即可
+	//MoveBy * moveby = MoveBy::create(1.25f, Point(-600, 0));	
+	//auto movebyBack = moveby->reverse();
+	//actionBody->runAction(Sequence::create(moveby, movebyBack, NULL));
+	
 //-------------------------------------------------------------------------------------------------
 
 // JumpTo/JumpBy
-/*
-	JumpTo * jumpto = JumpTo::create(1.25f, Point(40, 360), 150, 3);
-	actionBody->runAction(jumpto);
-	// 產生反向的 Action，上一行以及以下的三行擇一直行即可
-	JumpBy * jumpby = JumpBy::create(1.25f, Point(-600, 0), 150, 3);
-	auto jumpbyBack = jumpby->reverse();
-	auto sequence = Sequence::create(jumpby, jumpbyBack, NULL);
-	actionBody->runAction(Sequence::create(jumpby, jumpbyBack, NULL));
-*/
+
+//	JumpTo * jumpto = JumpTo::create(1.25f, Point(40, 360), 150, 3);
+//	//actionBody->runAction(jumpto);
+//	// 產生反向的 Action，上一行以及以下的三行擇一直行即可
+//	JumpBy * jumpby = JumpBy::create(1.25f, Point(-600, 0), 150, 3);
+//	auto jumpbyBack = jumpby->reverse();
+////	auto sequence = Sequence::create(jumpby, jumpbyBack, NULL);////////////////////////////
+//	actionBody->runAction(Sequence::create(jumpby, jumpbyBack, NULL));
+////	actionBody->runAction(sequence);
+
 //-------------------------------------------------------------------------------------------------
 
 // ScaleTo/ScaleTo
-	/*
-	ScaleTo * scaleto = ScaleTo::create(1.25f, 0.5f);
-//	actionBody->runAction(scaleto);
-	// 產生反向的 Action，上一行以及以下的所有程式碼擇一直行即可
-	ScaleBy * scaleby = ScaleBy::create(1.25f, 0.5f);
-	auto scalebyBack = scaleby->reverse();
-	auto sequence = Sequence::create(scaleby, scalebyBack, NULL);
-	actionBody->runAction(sequence);
-	*/
+//	
+//	ScaleTo * scaleto = ScaleTo::create(1.25f, 0.5f);
+////	actionBody->runAction(scaleto);
+//	// 產生反向的 Action，上一行以及以下的所有程式碼擇一直行即可
+//	ScaleBy * scaleby = ScaleBy::create(1.25f, 0.5f);
+//	auto scalebyBack = scaleby->reverse();
+//	//auto sequence = Sequence::create(scaleby, scalebyBack, NULL);
+//	//actionBody->runAction(sequence);
+//	auto sequence = Sequence::create(scaleby, scalebyBack, NULL);
+//	actionBody->runAction(sequence);
+	
 //-------------------------------------------------------------------------------------------------
 
 // FadeIn/FadeOut
@@ -234,26 +197,26 @@ bool AnimationAction::init()
 //-------------------------------------------------------------------------------------------------
 
 // TintTo/TintBy
-/*
-	TintTo * tintto = TintTo::create(1.0f, Color3B(82, 131, 151));
-	actionBody->runAction(tintto);
-	TintBy * tintby = TintBy::create(1.0f,-118, -78, 88);
-//	actionBody->runAction(tintby);
-	//auto tintbyBack = tintby->reverse();
-	//auto sequence = Sequence::create(tintby, tintbyBack, NULL);
-	//actionBody->runAction(sequence);
-*/
+
+//	TintTo * tintto = TintTo::create(1.0f, Color3B(82, 131, 151));
+////	actionBody->runAction(tintto);
+//	TintBy * tintby = TintBy::create(1.0f,-118, -78, 88);
+////	actionBody->runAction(tintby);
+//	auto tintbyBack = tintby->reverse();
+//	auto sequence2 = Sequence::create(tintby, tintbyBack, NULL);
+//	actionBody->runAction(sequence2);
+
 //-------------------------------------------------------------------------------------------------
 
 // RotateTo/RotateBy
-	RotateTo * rotateto = RotateTo::create(1.0f, 60.0f);
-//	actionBody->runAction(rotateto);	
-
-	RotateBy * rotateby = RotateBy::create(1.0f, 30.0f);
-	//actionBody->runAction(rotateby);
-	//	旋轉 RotateBy 的累加效果   ---------------------------------
-	//_myAction = (cocos2d::Action *)RotateBy::create(1.0f, 30.0f);
-	//_myAction->retain();
+//	RotateTo * rotateto = RotateTo::create(1.0f, 60.0f);
+////	actionBody->runAction(rotateto);	
+//
+//	RotateBy * rotateby = RotateBy::create(1.0f, 30.0f);
+//	//actionBody->runAction(rotateby);
+//	//	旋轉 RotateBy 的累加效果   ---------------------------------
+//	_myAction = (cocos2d::Action *)RotateBy::create(1.0f, 30.0f);
+//	_myAction->retain();
 	//---------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
 
@@ -268,18 +231,18 @@ bool AnimationAction::init()
 	//sequence = Sequence::create(scaleby, scalebyBack, NULL);
 	//actionBody->runAction(sequence);
 
-	// 使用 Spawn
+	////// 使用 Spawn
 	//auto mySpawn = Spawn::createWithTwoActions(jumpby, scaleby);
 	//actionBody->runAction(mySpawn);
 //-------------------------------------------------------------------------------------------------
 
 //  Spawn 用在 Sequence 中
-	//JumpBy * jumpby = JumpBy::create(1.25f, Point(-600, 0), 150, 3);
-	//auto jumpbyBack = jumpby->reverse();
-	//TintTo * tintto = TintTo::create(1.0f, Color3B(82, 131, 151));
-	//auto mySpawn = Spawn::createWithTwoActions(jumpby, tintto);
-	//auto sequence = Sequence::create(mySpawn, jumpbyBack, NULL);
-	//actionBody->runAction(sequence);
+	////JumpBy * jumpby = JumpBy::create(1.25f, Point(-600, 0), 150, 3);
+	////auto jumpbyBack = jumpby->reverse();
+	////TintTo * tintto = TintTo::create(1.0f, Color3B(82, 131, 151));
+	////auto mySpawn = Spawn::createWithTwoActions(jumpby, tintto);
+	////auto sequence = Sequence::create(mySpawn, jumpbyBack, NULL);
+	////actionBody->runAction(sequence);
 //-------------------------------------------------------------------------------------------------
 
 //  EaseSineOut 與 EaseSineIn 搭配 Action 的使用
@@ -294,17 +257,17 @@ bool AnimationAction::init()
 //  EaseOut 與 EaseIn 搭配 Action 的使用
 	//MoveBy * moveby = MoveBy::create(1.0f, Point(-600, 0));
 	//auto movebyBack = moveby->reverse();
-	//auto moveSineOut = EaseOut::create(moveby,3);
+	//auto moveOut = EaseOut::create(moveby,3);
 	//auto delay = DelayTime::create(0.125f);
-	//auto moveSineIn = EaseIn::create(movebyBack, 3);
-	//actionBody->runAction(Sequence::create(moveSineOut, delay, moveSineIn, NULL));
+	//auto moveIn = EaseIn::create(movebyBack, 3);
+	//actionBody->runAction(Sequence::create(moveOut, delay, moveIn, NULL));
 //-------------------------------------------------------------------------------------------------
 
 //  Action 與 CallBack Function的使用
 	//MoveBy * moveby = MoveBy::create(1.0f, Point(-600, 0));
-	//auto moveSineOut = EaseOut::create(moveby,3);
+	//auto moveOut = EaseOut::create(moveby,3);
 	//auto callback = CallFunc::create(this, callfunc_selector(AnimationAction::actionFinished));
-	//actionBody->runAction(Sequence::create(moveSineOut, callback, NULL));
+	//actionBody->runAction(Sequence::create(moveOut, callback, NULL));
 //-------------------------------------------------------------------------------------------------
 
 // Double Jump 
@@ -322,46 +285,41 @@ bool AnimationAction::init()
 
 // CSB 與程式建立序列幀動畫的組合
 // Example 1 : ASimpleRunner 
-
-	// 讀入 csb 檔並取得 runnerRoot
-	auto getNode = CSLoader::createNode("ASimpleRunner.csb");
-	auto runnerRoot = (Node*)getNode->getChildByName("runnerRoot");
-	// 設定 runnerRoot 的位置，並加入場景中
-	runnerRoot->setPosition(visibleSize.width/2.0f, visibleSize.height / 2.0f);
-	Point pt = runnerRoot->getPosition();
-	runnerRoot->setScale(0.70f); // 如果需要縮放，從 runnerRoot 設定整體的縮放比例
-	this->addChild(runnerRoot);
-
-	// 從 runnderNode 取得 Cuber01_1 並建立 Sprite
-	auto runnerBody = (cocos2d::Sprite *)runnerRoot->getChildByName("cuber01_1");
-	// 設定 runner 的顏色
-	runnerBody->setColor(Color3B(255, 200, 50));
-
-	// 建立 runnerBody 所需的序列幀動畫
-	auto animCache1 = AnimationCache::getInstance();
-	animCache1->addAnimationsWithFile("cuberanim.plist");
-	auto animation3 = animCache1->getAnimation("running");
-	auto action3 = RepeatForever::create(Animate::create(animation3));
-
-	// 建立 runnerRoot 所需的 jumpAction
-	auto jumpAction = cocos2d::JumpBy::create(1.25f, Point(-500 , 0), 100, 3);
+//
+//	// 讀入 csb 檔並取得 runnerRoot
+//	auto runnerRoot = CSLoader::createNode("ASimpleRunner.csb");
+//	// 設定 runnerRoot 的位置，並加入場景中
+//	runnerRoot->setPosition(visibleSize.width / 2.0f, visibleSize.height / 2.0f);
+//	Point pt = runnerRoot->getPosition();
+//	runnerRoot->setScale(0.70f);
+//	this->addChild(runnerRoot);
+//
+//	// 從 runnderNode 取得 Cuber01_1 並建立 Sprite
+//	auto runnerBody = (cocos2d::Sprite *)runnerRoot->getChildByName("cuber01_1");
+//	// 設定 runner 的顏色
+//	runnerBody->setColor(Color3B(255, 200, 50));
+//
+//	// 建立 runnerBody 所需的序列幀動畫
+//	auto animCache1 = AnimationCache::getInstance();
+//	animCache1->addAnimationsWithFile("cuberanim.plist");
+//	auto animation3 = animCache1->getAnimation("running");
+//	auto action3 = RepeatForever::create(Animate::create(animation3));
+//
+//	// 建立 runnerRoot 所需的 jumpAction
+//	auto jumpAction = cocos2d::JumpBy::create(1.25f, Point(-500 , 0), 100, 3);
 //	auto jumpBack = jumpAction->reverse();
-	//以 runnerBody 為主體去執行方法一所建立的 Animation
-	runnerBody->runAction(action3);
-	runnerRoot->runAction(jumpAction);
-	//以 runnerRoot 同步執行 jumpAction
-//	runnerRoot->runAction(cocos2d::Sequence::create(jumpAction, jumpBack, NULL));
-
+//	//以 runnerBody 為主體去執行方法一所建立的 Animation
+//	runnerBody->runAction(action3);
+//	//以 runnerRoot 同步執行 jumpAction
+////	runnerRoot->runAction(cocos2d::Sequence::create(jumpAction, jumpBack, NULL));
 
 //-------------------------------------------------------------------------------------------------
 
 // Example 2 : RunnerNode
-
-	//runner1->runAction(RepeatForever::create(Animate::create(animation)));// 一直重複播放
-	auto runner = CRunner("Myrunner2.csb", *this);
-	runner.setPosition(visibleSize.width/ 2.0f + 300, visibleSize.height / 2.0f);
-	runner.setAnimation("cuberanim.plist");
-	runner.go();
+	//auto runner = CRunner("RunnerNode.csb", *this);
+	//runner.setPosition(visibleSize.width/ 2.0f + 300, visibleSize.height / 2.0f);
+	//runner.setAnimation("cuberanim.plist");
+	//runner.go();
 //-------------------------------------------------------------------------------------------------
 	
 	_listener1 = EventListenerTouchOneByOne::create();	//創建一個一對一的事件聆聽器

@@ -164,63 +164,52 @@
           <BoolFrame FrameIndex="35" Tween="False" Value="False" />
         </Timeline>
       </Animation>
-      <ObjectData Name="Node" Tag="15" ctype="GameNodeObjectData">
+      <ObjectData Name="rootNode" Tag="15" ctype="GameNodeObjectData">
         <Size X="0.0000" Y="0.0000" />
         <Children>
-          <AbstractNodeData Name="triRoot" ActionTag="-1369618824" Tag="36" IconVisible="True" LeftMargin="-2.0000" RightMargin="2.0000" TopMargin="-1.0000" BottomMargin="1.0000" ctype="SingleNodeObjectData">
-            <Size X="0.0000" Y="0.0000" />
-            <Children>
-              <AbstractNodeData Name="triblock" ActionTag="1414546605" VisibleForFrame="False" Alpha="24" Tag="37" IconVisible="False" LeftMargin="-84.0000" RightMargin="-84.0000" TopMargin="-72.0000" BottomMargin="-72.0000" ctype="SpriteObjectData">
-                <Size X="168.0000" Y="144.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position />
-                <Scale ScaleX="1.0000" ScaleY="1.0000" />
-                <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition />
-                <PreSize X="0.0000" Y="0.0000" />
-                <FileData Type="PlistSubImage" Path="triblock.png" Plist="scene101.plist" />
-                <BlendFunc Src="1" Dst="771" />
-              </AbstractNodeData>
-              <AbstractNodeData Name="triOuter" ActionTag="-1621414207" VisibleForFrame="False" Alpha="76" Tag="38" IconVisible="False" LeftMargin="-85.4964" RightMargin="-85.5036" TopMargin="-92.0020" BottomMargin="-75.9980" ctype="SpriteObjectData">
-                <Size X="171.0000" Y="168.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="0.0036" Y="8.0020" />
-                <Scale ScaleX="1.0000" ScaleY="1.0000" />
-                <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition />
-                <PreSize X="0.0000" Y="0.0000" />
-                <FileData Type="PlistSubImage" Path="triouter.png" Plist="scene101.plist" />
-                <BlendFunc Src="1" Dst="771" />
-              </AbstractNodeData>
-              <AbstractNodeData Name="Sprite_3" ActionTag="-1417836244" VisibleForFrame="False" Tag="39" IconVisible="False" LeftMargin="-120.0000" RightMargin="-120.0000" TopMargin="-129.0027" BottomMargin="-90.9973" ctype="SpriteObjectData">
-                <Size X="240.0000" Y="220.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position Y="19.0027" />
-                <Scale ScaleX="1.0000" ScaleY="1.0000" />
-                <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition />
-                <PreSize X="0.0000" Y="0.0000" />
-                <FileData Type="PlistSubImage" Path="flame1_01.png" Plist="scene101.plist" />
-                <BlendFunc Src="1" Dst="771" />
-              </AbstractNodeData>
-              <AbstractNodeData Name="trishadow_1" ActionTag="1175347666" Tag="11" IconVisible="False" LeftMargin="-64.1924" RightMargin="-72.8076" TopMargin="72.7700" BottomMargin="-95.7700" ctype="SpriteObjectData">
-                <Size X="137.0000" Y="23.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="4.3076" Y="-84.2700" />
-                <Scale ScaleX="1.0000" ScaleY="1.0000" />
-                <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition />
-                <PreSize X="0.0000" Y="0.0000" />
-                <FileData Type="PlistSubImage" Path="trishadow.png" Plist="scene101.plist" />
-                <BlendFunc Src="1" Dst="771" />
-              </AbstractNodeData>
-            </Children>
-            <AnchorPoint />
-            <Position X="-2.0000" Y="1.0000" />
+          <AbstractNodeData Name="triblock" ActionTag="1414546605" VisibleForFrame="False" Alpha="24" Tag="37" IconVisible="False" LeftMargin="-84.0000" RightMargin="-84.0000" TopMargin="-72.0000" BottomMargin="-72.0000" ctype="SpriteObjectData">
+            <Size X="168.0000" Y="144.0000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <Position />
             <Scale ScaleX="1.0000" ScaleY="1.0000" />
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition />
             <PreSize X="0.0000" Y="0.0000" />
+            <FileData Type="PlistSubImage" Path="triblock.png" Plist="scene101.plist" />
+            <BlendFunc Src="1" Dst="771" />
+          </AbstractNodeData>
+          <AbstractNodeData Name="triOuter" ActionTag="-1621414207" VisibleForFrame="False" Alpha="76" Tag="38" IconVisible="False" LeftMargin="-85.4964" RightMargin="-85.5036" TopMargin="-92.0020" BottomMargin="-75.9980" ctype="SpriteObjectData">
+            <Size X="171.0000" Y="168.0000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <Position X="0.0036" Y="8.0020" />
+            <Scale ScaleX="1.0000" ScaleY="1.0000" />
+            <CColor A="255" R="255" G="255" B="255" />
+            <PrePosition />
+            <PreSize X="0.0000" Y="0.0000" />
+            <FileData Type="PlistSubImage" Path="triouter.png" Plist="scene101.plist" />
+            <BlendFunc Src="1" Dst="771" />
+          </AbstractNodeData>
+          <AbstractNodeData Name="Sprite_3" ActionTag="-1417836244" VisibleForFrame="False" Tag="39" IconVisible="False" LeftMargin="-120.0000" RightMargin="-120.0000" TopMargin="-129.0027" BottomMargin="-90.9973" ctype="SpriteObjectData">
+            <Size X="240.0000" Y="220.0000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <Position Y="19.0027" />
+            <Scale ScaleX="1.0000" ScaleY="1.0000" />
+            <CColor A="255" R="255" G="255" B="255" />
+            <PrePosition />
+            <PreSize X="0.0000" Y="0.0000" />
+            <FileData Type="PlistSubImage" Path="flame1_01.png" Plist="scene101.plist" />
+            <BlendFunc Src="1" Dst="771" />
+          </AbstractNodeData>
+          <AbstractNodeData Name="trishadow_1" ActionTag="1175347666" Tag="11" IconVisible="False" LeftMargin="-64.1924" RightMargin="-72.8076" TopMargin="72.7700" BottomMargin="-95.7700" ctype="SpriteObjectData">
+            <Size X="137.0000" Y="23.0000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <Position X="4.3076" Y="-84.2700" />
+            <Scale ScaleX="1.0000" ScaleY="1.0000" />
+            <CColor A="255" R="255" G="255" B="255" />
+            <PrePosition />
+            <PreSize X="0.0000" Y="0.0000" />
+            <FileData Type="PlistSubImage" Path="trishadow.png" Plist="scene101.plist" />
+            <BlendFunc Src="1" Dst="771" />
           </AbstractNodeData>
         </Children>
       </ObjectData>

@@ -9,8 +9,8 @@ USING_NS_CC;
 CRunner::CRunner(const char *csbname, cocos2d::Layer &parent)
 {
 	// 讀取角色
-	auto getNode = CSLoader::createNode(csbname);
-	_runnerRoot = (cocos2d::Node*)getNode->getChildByName("RunnerRoot");
+	_runnerRoot = CSLoader::createNode(csbname);
+//	_runnerRoot = (cocos2d::Node*)getNode->getChildByName("RunnerRoot");
 	_runnerRoot->setPosition(0,0); // 預設放在 (0,0) 
 	_body = (cocos2d::Sprite *)_runnerRoot->getChildByName("body_cuber01");
 	_body->setColor(Color3B(255, 255, 255));

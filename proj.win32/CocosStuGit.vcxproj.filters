@@ -39,6 +39,9 @@
     <ClCompile Include="..\Classes\AnimationAction.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Final\EnemyRock.cpp">
+      <Filter>src\Final</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -55,6 +58,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\AnimationAction.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Final\EnemyRock.h">
+      <Filter>src\Final</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -5,10 +5,10 @@
         <LuaIsEncrypt Value="False" />
         <LuaEncryptKey Value="" />
         <LuaEncryptSign Value="" />
-        <Android_PackageName Value="org.cocos.Cocos2DXStuGit" />
+        <Android_PackageName Value="org.cocos.Scene101" />
         <AndroidkeyStore Value="" />
-        <AndroidVersion Value="" />
-        <iOS_Target Value="Cocos2DXStuGit-mobile" />
+        <AndroidVersion Value="android-19" />
+        <iOS_Target Value="Scene101-mobile" />
         <iOS_BundleID Value="" />
         <Platform Value="None" />
         <RunPlatform Value="Windows" />
@@ -26,18 +26,6 @@
         <LastPublishType Value="Resource" />
         <IsLastPublish Value="True" />
         <LastRunType Value="Windows" />
-      </Value>
-    </Item>
-    <Item Key="TabsParamsKey">
-      <Value ctype="TabsInfo">
-        <OpenedDocuments>
-          <FilePathData Path="MainScene.csd" />
-          <FilePathData Path="AnimationAction.csd" />
-          <FilePathData Path="RunnerNode.csd" />
-          <FilePathData Path="Myrunner.csd" />
-          <FilePathData Path="Myrunner2.csd" />
-        </OpenedDocuments>
-        <ActiveDocument Path="Myrunner2.csd" />
       </Value>
     </Item>
   </Properties>

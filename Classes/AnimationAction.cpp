@@ -1,10 +1,12 @@
 #include "AnimationAction.h"
 #include "cocostudio/CocoStudio.h"
-#include "Final\CRunner.h"
+//#include "Final\CRunner.h"
 
 USING_NS_CC;
 
-#define DOUBLEJUMP 1
+//#define DOUBLEJUMP 1
+#define HEALTHPOINT 5
+
 
 using namespace cocostudio::timeline;
 using namespace ui;
@@ -27,10 +29,12 @@ Scene* AnimationAction::createScene()
 
 AnimationAction::~AnimationAction()
 {
+
 	if( _myAction != nullptr ) _myAction->release();
 	if (_myJump != nullptr) _myJump->release();
 	if (_mycallback != nullptr) _mycallback->release();
 
+	SimpleAudioEngine::getInstance()->unloadEffect("./music/gainpoint.mp3"); // 釋放音效檔
 	AnimationCache::destroyInstance();  // 釋放 AnimationCache 取得的資源
 	SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();
 	Director::getInstance()->getTextureCache()->removeUnusedTextures();
@@ -39,6 +43,7 @@ AnimationAction::~AnimationAction()
 // on "init" you need to initialize your instance
 bool AnimationAction::init()
 {
+
 	_myAction = nullptr;
 	_myJump = nullptr;
 	_mycallback = nullptr;
@@ -53,69 +58,116 @@ bool AnimationAction::init()
         return false;
     }
     
-    auto rootNode = CSLoader::createNode("AnimationAction.csb");
+    auto rootNode = CSLoader::createNode("AnimationAction.csb"); //AnimationAction.csb
     addChild(rootNode);
 
 // 利用程式直接產生序列幀動畫 
 // STEP 1 : 讀入儲存多張圖片的 plist 檔
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("scene101.plist");
-// ------------------------------------------------------------------------------------------------- 
-// 方法一  利用 SpriteFrameCache 來儲存每一張要連續撥放的圖片
 
-	//// STEP 2 : 產生連續圖片的檔名並加入 animation 中
-	//auto frameCache = SpriteFrameCache::getInstance();
-	//// 利用 STL 的 vector 來儲存連續的 SpriteFrame
-	//Vector<SpriteFrame*> animFrames(8);
-	//char tmp[50];
-	//for (int j = 1; j <= 8; j++)
-	//{
-	//	sprintf(tmp, "cuber%02d.png", j); // 產生 cuber01.png ~  cuber08.png
-	//									  //從 plist 中取得圖檔名稱並建立 spriteFrame
-	//	auto frame = frameCache->getSpriteFrameByName(tmp);
-	//	animFrames.pushBack(frame);
-	//}
-	//// STEP 3: 建立 animation
-	//auto animation1 = Animation::createWithSpriteFrames(animFrames, 0.04f);
 
-	//// STEP 4：建立序列幀動畫的主體
-	//auto runner1 = Sprite::createWithSpriteFrameName("cuber01.png");
-	//runner1->setPosition(visibleSize.width / 2.0f, visibleSize.height / 2.0f + 150);
-	//this->addChild(runner1);
-
-	//// STEP 5：由主體呼叫動畫的播放
-	//runner1->runAction(RepeatForever::create(Animate::create(animation1)));// 一直重複播放
-
-//--------------------------------------------------------------------------------------------------
-
-// ------------------------------------------------------------------------------------------------- 
-// 方法二 利用儲存序列幀動畫的 plist 來建立
-/*
-	// STEP 2: 以 AnimationCache 來讀取該 plist 檔
+//SimpleAudioEngine	音樂音效 --------------------------------------------------------------------------
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("./music/SR_bg.mp3", true);
+	//SimpleAudioEngine::getInstance()->stopBackgroundMusic();	// 停止背景音樂
+	/*		playBackgroundMusic 所讀取的音樂檔，並不會被加入內部的儲存，所以不用釋放，但切換場景時，記得關閉它的撥放
+			可用 SimpleAudioEngine::isBackgroundMusicPlaying() 去查詢  回傳值 true 代表正在撥放，false 代表沒有*/
+	SimpleAudioEngine::getInstance()->preloadEffect("./music/running.mp3");	// 預先載入音效檔
+	_musiceffect[0] = SimpleAudioEngine::getInstance()->playEffect("./music/gainpoint.mp3");  // 播放音效檔
+	SimpleAudioEngine::getInstance()->stopEffect(_musiceffect[0]);  // 停止音效撥放，必須使用 PlayEffect 傳回的 id
+	//SimpleAudioEngine::getInstance()->unloadEffect("./music/running.mp3");  // 釋放音效檔
+//AnimCache ----------------------------------------------------------------------------------------
 	auto animCache = AnimationCache::getInstance();
 	animCache->addAnimationsWithFile("cuberanim.plist");
-	auto animation2 = animCache->getAnimation("running");
+// 序列幀動畫 -------------------------------------------------------------------------------------
+	auto Viewer = (ActionTimeline *)CSLoader::createTimeline("AnimationAction.csb");
+	rootNode->runAction(Viewer);
+	Viewer->gotoFrameAndPlay(0, 28, true);//21
+// Player&jump -----------------------------------------------------------------------------------------
+	//_playercharacter = new CRunner("RunnerNode.csb", *this);
+	_playercharacter = new CRunner("RunnerNode2.csb", *this);
+	_playercharacter->setPosition(visibleSize.width/ 2.0f + 300, visibleSize.height / 2.0f);
+	_playercharacter->setAnimation("cuberanim.plist");
+	_playercharacter->go();
+	//jump&back
+	_NoJumps = 0;
+	_myJump = JumpBy::create(0.65f, Point(0, 0), 150, 1);
+	_myJump->retain();
+	_runnerbodyPt = _playercharacter->_runnerRoot->getPosition();
 
-	// STEP 3: 建立 animation
-	auto action2 = RepeatForever::create(Animate::create(animation2));
+	_runnerPt = _playercharacter->_allRoot->getPosition();//_allRoot
+	_mycallback = CallFunc::create(this, callfunc_selector(AnimationAction::actionFinished));
+	_mycallback->retain();
+// Score -----------------------------------------------------------------------------------------
+	_playerscoretext = (cocos2d::ui::Text *)rootNode->getChildByName("Text_1");
+	_iplayerscore = 0;
+	_playerscoretext->setString(StringUtils::format("Score %d", _iplayerscore));
+// 321GO -----------------------------------------------------------------------------------------
+	_Go123 = (cocos2d::ui::Text *)rootNode->getChildByName("GO123");
+	_Go123->setVisible(false);
+	_bstartGoflag = false;
+//HP BAR-------------------------------------------------------------------------------------------
+	_hpbar = (cocos2d::ui::LoadingBar *)rootNode->getChildByName("HPbar");
+	_hpbar->setDirection(LoadingBar::Direction::LEFT);
+	_hpbar->setPercent(100* HEALTHPOINT/ HEALTHPOINT);
+	_ihp = HEALTHPOINT;
+	_bdieflag = false;
+//Rock -----------------------------------------------------------------------------------------
+	//_rockstartPt = Point(-100, visibleSize.height / 2.0f);
+	//_rockendPt = Point(visibleSize.width + 100, visibleSize.height / 2.0f - 30);
+	_rockstartPt = Point(0, visibleSize.height / 2.0f-10 );
+	_rockendPt = Point(visibleSize.width, visibleSize.height / 2.0f-10);
+	_rock01 = new EnemyRock(1,"triangleNodeN.csb", *this);
+	_rock01->setPosition(_rockstartPt);
 
-	// STEP 4：建立序列幀動畫的主體
-	auto runner2 = Sprite::createWithSpriteFrameName("cuber01.png");
-	runner2->setPosition(visibleSize.width / 2.0f, visibleSize.height / 2.0f-150);
-	this->addChild(runner2);
 
-	// STEP 5：由主體呼叫動畫的播放
-	runner2->runAction(action2);// 一直重複播放
-*/
-//--------------------------------------------------------------------------------------------------
+	_rock02 = new EnemyRock(2,"triangleNode.csb", *this);
+	_rock02->setPosition(_rockstartPt);
+	_rock02->_enemyroot->setVisible(false);
+
+	
+
+	_rock03 = new EnemyRock(3, "triangleNodeT.csb", *this);
+	_rock03->setPosition(_rockstartPt);
+	_rock03->_enemyroot->setVisible(false);
+
+//StartBtn -------------------------------------------------------------------------
+	//cuberbtn = dynamic_cast<Button*>(rootNode->getChildByName("Cuberbtn"));
+	_cuberbtn = (cocos2d::ui::Button *)(rootNode->getChildByName("Cuberbtn"));
+	_cuberbtn->addTouchEventListener(CC_CALLBACK_2(AnimationAction::CuberBtnTouchEvent, this));
+//Resetbtn ----------------------------
+	_resetbtn = (cocos2d::ui::Button *)(rootNode->getChildByName("Reset"));
+	_resetbtn->addTouchEventListener(CC_CALLBACK_2(AnimationAction::ResetBtnTouchEvent, this));
+	_resetbtn->setVisible(false);
 
 
-// Action -----------------------------------------------------------------------------------------
+	//MoveTo * moveto = MoveTo::create(1.25f, Point(40, 360));
+	//enemyrock->runAction(moveto);
+	//// 產生反向的 Action，上一行以及以下的三行擇一直行即可
+	//MoveBy * moveby = MoveBy::create(1.25f, Point(-600, 0));
+	//auto movebyBack = moveby->reverse();
+	//enemyrock->runAction(Sequence::create(moveby, movebyBack, NULL));
+/////////// -----------------------------------------------------------------------//////////////////
+
+
+	////auto actionBody = Sprite::createWithSpriteFrameName(runnerNode);
 	auto actionBody = Sprite::createWithSpriteFrameName("cuber01.png");
-	actionBody->setPosition(visibleSize.width / 2.0f, visibleSize.height / 2.0f);
-	actionBody->setTag(101);	// 用於取得該物件
-	actionBody->setColor(Color3B(200, 209, 63));
-	this->addChild(actionBody);
-	// 後續其他的範例都使用這個 actionBody 
+	////auto actionBody = (cocos2d::Sprite *)animRoot->getChildByName("cuber01_1");
+	//actionBody->setPosition(visibleSize.width / 2.0f, visibleSize.height / 2.0f);
+	//actionBody->setScale(0.70f);
+	//actionBody->setTag(101);	// 用於取得該物件
+	//actionBody->setColor(Color3B(200, 209, 63));
+	//this->addChild(actionBody);
+
+		// 建立 runnerBody 所需的序列幀動畫
+	//auto animCache1 = AnimationCache::getInstance();
+	//animCache1->addAnimationsWithFile("cuberanim.plist");
+	//auto animation3 = animCache1->getAnimation("running");
+	//auto action3 = RepeatForever::create(Animate::create(animation3));//重複播放
+	//actionBody->runAction(action3);
+
+
+
+
 
 // BezierBy/BezierTo
 	// BezierTo
@@ -145,41 +197,38 @@ bool AnimationAction::init()
 //-------------------------------------------------------------------------------------------------
 
 // MoveTo/MoveBy
-	
-	//MoveTo * moveto = MoveTo::create(1.25f, Point(40, 360));
-	////actionBody->runAction(moveto);
-	//// 產生反向的 Action，上一行以及以下的三行擇一直行即可
-	//MoveBy * moveby = MoveBy::create(1.25f, Point(-600, 0));	
-	//auto movebyBack = moveby->reverse();
-	//actionBody->runAction(Sequence::create(moveby, movebyBack, NULL));
-	
+	/*
+	MoveTo * moveto = MoveTo::create(1.25f, Point(40, 360));
+	actionBody->runAction(moveto);
+	// 產生反向的 Action，上一行以及以下的三行擇一直行即可
+	MoveBy * moveby = MoveBy::create(1.25f, Point(-600, 0));	
+	auto movebyBack = moveby->reverse();
+	actionBody->runAction(Sequence::create(moveby, movebyBack, NULL));
+	*/
 //-------------------------------------------------------------------------------------------------
 
 // JumpTo/JumpBy
-
-//	JumpTo * jumpto = JumpTo::create(1.25f, Point(40, 360), 150, 3);
-//	//actionBody->runAction(jumpto);
-//	// 產生反向的 Action，上一行以及以下的三行擇一直行即可
-//	JumpBy * jumpby = JumpBy::create(1.25f, Point(-600, 0), 150, 3);
-//	auto jumpbyBack = jumpby->reverse();
-////	auto sequence = Sequence::create(jumpby, jumpbyBack, NULL);////////////////////////////
-//	actionBody->runAction(Sequence::create(jumpby, jumpbyBack, NULL));
-////	actionBody->runAction(sequence);
-
+/*
+	JumpTo * jumpto = JumpTo::create(1.25f, Point(40, 360), 150, 3);
+	actionBody->runAction(jumpto);
+	// 產生反向的 Action，上一行以及以下的三行擇一直行即可
+	JumpBy * jumpby = JumpBy::create(1.25f, Point(-600, 0), 150, 3);
+	auto jumpbyBack = jumpby->reverse();
+	auto sequence = Sequence::create(jumpby, jumpbyBack, NULL);
+	actionBody->runAction(Sequence::create(jumpby, jumpbyBack, NULL));
+*/
 //-------------------------------------------------------------------------------------------------
 
 // ScaleTo/ScaleTo
-//	
-//	ScaleTo * scaleto = ScaleTo::create(1.25f, 0.5f);
-////	actionBody->runAction(scaleto);
-//	// 產生反向的 Action，上一行以及以下的所有程式碼擇一直行即可
-//	ScaleBy * scaleby = ScaleBy::create(1.25f, 0.5f);
-//	auto scalebyBack = scaleby->reverse();
-//	//auto sequence = Sequence::create(scaleby, scalebyBack, NULL);
-//	//actionBody->runAction(sequence);
-//	auto sequence = Sequence::create(scaleby, scalebyBack, NULL);
-//	actionBody->runAction(sequence);
-	
+	/*
+	ScaleTo * scaleto = ScaleTo::create(1.25f, 0.5f);
+//	actionBody->runAction(scaleto);
+	// 產生反向的 Action，上一行以及以下的所有程式碼擇一直行即可
+	ScaleBy * scaleby = ScaleBy::create(1.25f, 0.5f);
+	auto scalebyBack = scaleby->reverse();
+	auto sequence = Sequence::create(scaleby, scalebyBack, NULL);
+	actionBody->runAction(sequence);
+	*/
 //-------------------------------------------------------------------------------------------------
 
 // FadeIn/FadeOut
@@ -197,26 +246,26 @@ bool AnimationAction::init()
 //-------------------------------------------------------------------------------------------------
 
 // TintTo/TintBy
-
-//	TintTo * tintto = TintTo::create(1.0f, Color3B(82, 131, 151));
-////	actionBody->runAction(tintto);
-//	TintBy * tintby = TintBy::create(1.0f,-118, -78, 88);
-////	actionBody->runAction(tintby);
-//	auto tintbyBack = tintby->reverse();
-//	auto sequence2 = Sequence::create(tintby, tintbyBack, NULL);
-//	actionBody->runAction(sequence2);
-
+/*
+	TintTo * tintto = TintTo::create(1.0f, Color3B(82, 131, 151));
+	actionBody->runAction(tintto);
+	TintBy * tintby = TintBy::create(1.0f,-118, -78, 88);
+//	actionBody->runAction(tintby);
+	//auto tintbyBack = tintby->reverse();
+	//auto sequence = Sequence::create(tintby, tintbyBack, NULL);
+	//actionBody->runAction(sequence);
+*/
 //-------------------------------------------------------------------------------------------------
 
 // RotateTo/RotateBy
-//	RotateTo * rotateto = RotateTo::create(1.0f, 60.0f);
-////	actionBody->runAction(rotateto);	
-//
-//	RotateBy * rotateby = RotateBy::create(1.0f, 30.0f);
-//	//actionBody->runAction(rotateby);
-//	//	旋轉 RotateBy 的累加效果   ---------------------------------
-//	_myAction = (cocos2d::Action *)RotateBy::create(1.0f, 30.0f);
-//	_myAction->retain();
+	RotateTo * rotateto = RotateTo::create(1.0f, 60.0f);
+//	actionBody->runAction(rotateto);	
+
+	RotateBy * rotateby = RotateBy::create(1.0f, 30.0f);
+	//actionBody->runAction(rotateby);
+	//	旋轉 RotateBy 的累加效果   ---------------------------------
+	//_myAction = (cocos2d::Action *)RotateBy::create(1.0f, 30.0f);
+	//_myAction->retain();
 	//---------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
 
@@ -231,18 +280,18 @@ bool AnimationAction::init()
 	//sequence = Sequence::create(scaleby, scalebyBack, NULL);
 	//actionBody->runAction(sequence);
 
-	////// 使用 Spawn
+	// 使用 Spawn
 	//auto mySpawn = Spawn::createWithTwoActions(jumpby, scaleby);
 	//actionBody->runAction(mySpawn);
 //-------------------------------------------------------------------------------------------------
 
 //  Spawn 用在 Sequence 中
-	////JumpBy * jumpby = JumpBy::create(1.25f, Point(-600, 0), 150, 3);
-	////auto jumpbyBack = jumpby->reverse();
-	////TintTo * tintto = TintTo::create(1.0f, Color3B(82, 131, 151));
-	////auto mySpawn = Spawn::createWithTwoActions(jumpby, tintto);
-	////auto sequence = Sequence::create(mySpawn, jumpbyBack, NULL);
-	////actionBody->runAction(sequence);
+	//JumpBy * jumpby = JumpBy::create(1.25f, Point(-600, 0), 150, 3);
+	//auto jumpbyBack = jumpby->reverse();
+	//TintTo * tintto = TintTo::create(1.0f, Color3B(82, 131, 151));
+	//auto mySpawn = Spawn::createWithTwoActions(jumpby, tintto);
+	//auto sequence = Sequence::create(mySpawn, jumpbyBack, NULL);
+	//actionBody->runAction(sequence);
 //-------------------------------------------------------------------------------------------------
 
 //  EaseSineOut 與 EaseSineIn 搭配 Action 的使用
@@ -257,34 +306,24 @@ bool AnimationAction::init()
 //  EaseOut 與 EaseIn 搭配 Action 的使用
 	//MoveBy * moveby = MoveBy::create(1.0f, Point(-600, 0));
 	//auto movebyBack = moveby->reverse();
-	//auto moveOut = EaseOut::create(moveby,3);
+	//auto moveSineOut = EaseOut::create(moveby,3);
 	//auto delay = DelayTime::create(0.125f);
-	//auto moveIn = EaseIn::create(movebyBack, 3);
-	//actionBody->runAction(Sequence::create(moveOut, delay, moveIn, NULL));
+	//auto moveSineIn = EaseIn::create(movebyBack, 3);
+	//actionBody->runAction(Sequence::create(moveSineOut, delay, moveSineIn, NULL));
 //-------------------------------------------------------------------------------------------------
 
 //  Action 與 CallBack Function的使用
 	//MoveBy * moveby = MoveBy::create(1.0f, Point(-600, 0));
-	//auto moveOut = EaseOut::create(moveby,3);
+	//auto moveSineOut = EaseOut::create(moveby,3);
 	//auto callback = CallFunc::create(this, callfunc_selector(AnimationAction::actionFinished));
-	//actionBody->runAction(Sequence::create(moveOut, callback, NULL));
+	//actionBody->runAction(Sequence::create(moveSineOut, callback, NULL));
 //-------------------------------------------------------------------------------------------------
 
 // Double Jump 
-#ifdef DOUBLEJUMP
-	_NoJumps = 0;
-	_myJump = JumpBy::create(0.65f, Point(0, 0), 150, 1);
-	_myJump->retain();
-	actionBody->setScale(0.65f);
-	actionBody->setPosition(visibleSize.width/2.0f, visibleSize.height / 2.0f-50);
-	_runnerPt = actionBody->getPosition();
-	_mycallback = CallFunc::create(this, callfunc_selector(AnimationAction::actionFinished));
-	_mycallback->retain();
-#endif
 //-------------------------------------------------------------------------------------------------
 
 // CSB 與程式建立序列幀動畫的組合
-// Example 1 : ASimpleRunner 
+//// Example 1 : ASimpleRunner 
 //
 //	// 讀入 csb 檔並取得 runnerRoot
 //	auto runnerRoot = CSLoader::createNode("ASimpleRunner.csb");
@@ -306,8 +345,8 @@ bool AnimationAction::init()
 //	auto action3 = RepeatForever::create(Animate::create(animation3));
 //
 //	// 建立 runnerRoot 所需的 jumpAction
-//	auto jumpAction = cocos2d::JumpBy::create(1.25f, Point(-500 , 0), 100, 3);
-//	auto jumpBack = jumpAction->reverse();
+//	//auto jumpAction = cocos2d::JumpBy::create(1.25f, Point(-500 , 0), 100, 3);////
+//	//auto jumpBack = jumpAction->reverse();////
 //	//以 runnerBody 為主體去執行方法一所建立的 Animation
 //	runnerBody->runAction(action3);
 //	//以 runnerRoot 同步執行 jumpAction
@@ -321,7 +360,11 @@ bool AnimationAction::init()
 	//runner.setAnimation("cuberanim.plist");
 	//runner.go();
 //-------------------------------------------------------------------------------------------------
-	
+//SETStart ---------------------------
+//	setstart();
+//-------------------------------------------------------------------------------------------------
+
+
 	_listener1 = EventListenerTouchOneByOne::create();	//創建一個一對一的事件聆聽器
 	_listener1->onTouchBegan = CC_CALLBACK_2(AnimationAction::onTouchBegan, this);		//加入觸碰開始事件
 	_listener1->onTouchMoved = CC_CALLBACK_2(AnimationAction::onTouchMoved, this);		//加入觸碰移動事件
@@ -336,26 +379,31 @@ void AnimationAction::actionFinished()
 {
 	// do something on complete
 	CCLOG("B %d\n", _NoJumps);
-
-#ifdef DOUBLEJUMP
+	SimpleAudioEngine::getInstance()->stopEffect(_musiceffect[0]);
 	_NoJumps--;
 	if (_NoJumps == 1) {
+		SimpleAudioEngine::getInstance()->stopEffect(_musiceffect[0]);
 		auto moveto = MoveTo::create(0.15f, _runnerPt);
-		auto actionBody = this->getChildByTag(101);
-		actionBody->runAction(moveto);
+		_playercharacter->_allRoot->runAction(moveto);
 		_NoJumps--;
 	}
-#endif
-
 }
 
 
 void AnimationAction::doStep(float dt)
 {
+	//得分設置
+	if (_ihp<=0)_bdieflag = true;
+	if(_bstartGoflag)TTOGO(dt);
+	_playerscoretext->setString(StringUtils::format("Score %d", _iplayerscore));
+	_playercharacter->changeface(dt);
+	_hpbar->setPercent(100 * _ihp / HEALTHPOINT);
+	if(!_bdieflag)rockback();
+	else if(_bdieflag && _ihp <= 0)die();
 
 }
 
-void AnimationAction::CuberBtnTouchEvent(Ref *pSender, Widget::TouchEventType type)
+void AnimationAction::CuberBtnTouchEvent(cocos2d::Ref *pSender, cocos2d::ui::Widget::TouchEventType type)
 {
 	switch (type)
 	{
@@ -367,6 +415,9 @@ void AnimationAction::CuberBtnTouchEvent(Ref *pSender, Widget::TouchEventType ty
 			break;
 		case Widget::TouchEventType::ENDED:
 			log("Touch Up");
+			setstart();
+			_cuberbtn->setVisible(false);
+			_resetbtn->setVisible(true);
 			break;
 		case Widget::TouchEventType::CANCELED:
 			log("Touch Cancelled");
@@ -375,23 +426,36 @@ void AnimationAction::CuberBtnTouchEvent(Ref *pSender, Widget::TouchEventType ty
 			break;
 	}
 }
-
+void AnimationAction::ResetBtnTouchEvent(cocos2d::Ref *pSender, cocos2d::ui::Widget::TouchEventType type) {
+	switch (type)
+	{
+	case Widget::TouchEventType::ENDED:
+		log("Touch Up");
+		setreplay();
+		_resetbtn->setVisible(false);
+		_cuberbtn->setVisible(true);
+		break;
+	default:
+		break;
+	}
+}
 bool AnimationAction::onTouchBegan(cocos2d::Touch *pTouch, cocos2d::Event *pEvent)//觸碰開始事件
 {
 	Point touchLoc = pTouch->getLocation();
 
-#ifdef DOUBLEJUMP
-	auto actionBody = this->getChildByTag(101);
+	
 	if (_NoJumps == 0) {  // 第一次被按下
-		actionBody->runAction(Sequence::create(_myJump, _mycallback, NULL));
+		SimpleAudioEngine::getInstance()->playEffect("./music/gainpoint.mp3");  // 播放音效檔
+		playerchactermoveset();
 		_NoJumps++;
 	}
-	else if(_NoJumps == 1 ){  // 第二次被按下
+	else if (_NoJumps == 1) {  // 第二次被按下
+		SimpleAudioEngine::getInstance()->playEffect("./music/gainpoint.mp3");  // 播放音效檔
 		_NoJumps++;
-		actionBody->stopAllActions();
-		actionBody->runAction(Sequence::create(_myJump, _mycallback, NULL));
+		_playercharacter->_allRoot->stopAllActions();
+		playerchactermoveset();
 	}
-#endif
+
 	return true;
 }
 
@@ -410,4 +474,128 @@ void  AnimationAction::onTouchEnded(cocos2d::Touch *pTouch, cocos2d::Event *pEve
 	//actionbody->runAction(_myAction);
 	//CCLOG("%d", actionbody->getNumberOfRunningActions());
 //--------------------------------------------------------------
+}
+
+
+
+
+void  AnimationAction::playerchactermoveset() {
+	auto sequencejump = Sequence::create(_myJump, _mycallback, NULL);
+	_playercharacter->_allRoot->runAction(sequencejump);
+}
+
+void AnimationAction::rockback() {
+	
+	_playercharacter->getrealPos(_runnerbodyPt);//取得玩家位置
+	enemyanim();
+	 _rock01->collision(_ihp, _iplayerscore, _playercharacter->playerface, _runnerbodyPt);//碰撞
+	 _rock02->collision(_ihp, _iplayerscore, _playercharacter->playerface, _runnerbodyPt);//碰撞
+	 _rock03->collision(_ihp, _iplayerscore, _playercharacter->playerface, _runnerbodyPt);//碰撞
+
+	if (_rock01->_enemyroot->getPosition().x >= _rockendPt.x-10) {
+		_rock01->_enemyroot->setPosition(_rockstartPt);
+		_rock01->_fcollision = true;
+		auto  enemyrockmoveto = MoveTo::create(3.5f, _rockendPt);
+		_rock01->_enemyroot->runAction(enemyrockmoveto);
+	}
+	if (_rock02->_enemyroot->getPosition().x >= _rockendPt.x - 10) {
+		_rock02->_enemyroot->setPosition(_rockstartPt);
+		_rock02->_enemyroot->setVisible(false);
+		_rock02->_animflag = true;
+		_rock02->_fcollision = true;
+		auto  enemyrockmoveto = MoveTo::create(3.5f, _rockendPt);
+		_rock02->_enemyroot->runAction(enemyrockmoveto);
+	}
+	if (_rock03->_enemyroot->getPosition().x >= _rockendPt.x - 10) {
+		_rock03->_enemyroot->setPosition(_rockstartPt);
+		_rock03->_enemyroot->setVisible(false);
+		_rock03->_animflag = true;
+		_rock03->_fcollision = true;
+		auto  enemyrockmoveto = MoveTo::create(3.5f, _rockendPt);
+		_rock03->_enemyroot->runAction(enemyrockmoveto);
+	}
+
+}
+
+void AnimationAction::setstart() {
+	_Go123->setVisible(true);
+	_bdieflag = false;
+	_bstartGoflag = true;
+	_benemy1flag = true;
+	_benemy2flag = true;
+	timeloader = 0.0;
+	_ihp = HEALTHPOINT;
+	_iplayerscore = 0;
+
+
+	_rock01->_fcollision = true;
+	_rock01->_enemyroot->setPosition(_rockstartPt);//重設敵人位置
+	_rock02->_fcollision = true;
+	_rock02->_enemyroot->setPosition(_rockstartPt);//重設敵人位置
+	_rock03->_fcollision = true;
+	_rock03->_enemyroot->setPosition(_rockstartPt);//重設敵人位置
+}
+
+void AnimationAction::setreplay() {
+	_Go123->setVisible(false);
+	_Go123->setString(StringUtils::format(""));
+	
+	_ihp = HEALTHPOINT;
+	_iplayerscore = 0;
+
+	_rock01->_enemyroot->stopAllActions();//暫停敵人移動
+	_rock02->_enemyroot->stopAllActions();//暫停敵人移動
+	_rock03->_enemyroot->stopAllActions();//暫停敵人移動
+}
+void AnimationAction::die() {
+	_playercharacter->changedieface();
+	_Go123->setVisible(true);
+	_Go123->setString(StringUtils::format("fail"));
+		
+}
+void AnimationAction::TTOGO(float dt) {
+	timeloader+= dt;
+	if (timeloader >= 6.0f ) {
+		_bstartGoflag = false;
+		timeloader = 6.0f;
+
+		auto  enemyrockmoveto = MoveTo::create(3.5f, _rockendPt);
+		_rock03->_enemyroot->runAction(enemyrockmoveto);
+
+	}
+	if (timeloader >= 5.0f && _benemy2flag) {
+		auto  enemyrockmoveto = MoveTo::create(3.5f, _rockendPt);
+		_rock02->_enemyroot->runAction(enemyrockmoveto);
+		_benemy2flag = false;
+	}
+	else if (timeloader >= 4.0f && _benemy1flag){
+		_Go123->setVisible(false);
+		auto  enemyrockmoveto = MoveTo::create(3.5f, _rockendPt);
+		_rock01->_enemyroot->runAction(enemyrockmoveto);
+		_benemy1flag = false;
+	}
+	//GO//1//2//3
+	else if (timeloader >= 3.0f)	_Go123->setString(StringUtils::format("GO"));
+	else if (timeloader >= 2.0f)	_Go123->setString(StringUtils::format("1"));
+	else if (timeloader >= 1.0f) 	_Go123->setString(StringUtils::format("2"));
+	else if (timeloader >= 0.0f) 	_Go123->setString(StringUtils::format("3"));
+}
+void AnimationAction::enemyanim() {
+	if (_rock02->_enemyroot->getPosition().x >= 300 && _rock02->_animflag) {
+		_rock02->_enemyroot->setVisible(true);
+		_rock02->_animflag = false;
+		//敵人動畫TAT -------------------------------------------------------------------------
+		auto enemyanimaction = (ActionTimeline *)CSLoader::createTimeline("triangleNode.csb");
+		enemyanimaction->gotoFrameAndPlay(0, 35, false);
+		_rock02->_enemyroot->runAction(enemyanimaction);
+	}
+
+	if (_rock03->_enemyroot->getPosition().x >= 600 && _rock03->_animflag) {
+		_rock03->_enemyroot->setVisible(true);
+		_rock03->_animflag = false;
+		//敵人動畫TAT -------------------------------------------------------------------------
+		auto enemyanimaction = (ActionTimeline *)CSLoader::createTimeline("triangleNodeT.csb");
+		enemyanimaction->gotoFrameAndPlay(0, 32, true);
+		_rock03->_enemyroot->runAction(enemyanimaction);
+	}
 }

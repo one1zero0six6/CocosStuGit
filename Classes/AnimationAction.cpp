@@ -114,8 +114,8 @@ bool AnimationAction::init()
 //Rock -----------------------------------------------------------------------------------------
 	//_rockstartPt = Point(-100, visibleSize.height / 2.0f);
 	//_rockendPt = Point(visibleSize.width + 100, visibleSize.height / 2.0f - 30);
-	_rockstartPt = Point(0, visibleSize.height / 2.0f-10 );
-	_rockendPt = Point(visibleSize.width, visibleSize.height / 2.0f-10);
+	_rockstartPt = Point(-100, visibleSize.height / 2.0f-10 );
+	_rockendPt = Point(visibleSize.width+100, visibleSize.height / 2.0f-10);
 	_rock01 = new EnemyRock(1,"triangleNodeN.csb", *this);
 	_rock01->setPosition(_rockstartPt);
 
